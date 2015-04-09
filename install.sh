@@ -1,0 +1,147 @@
+#!/bin/bash
+
+#takes up aprox 384Mb
+
+#		[for best results, run as sudoer]
+# "--------------------------------------------------"
+# "By installing this scirpt, you will be downloading"
+# "all packages nessissary to run Snort with Barnyard2" 
+# "and MySQL. As well as configuration changes. Do NOT
+# "continue unless you have permission and have read"
+# "through all the changes it will make"
+# "--------------------------------------------------"
+
+
+
+apt-get update -y; apt-get upgrade -y;
+
+#snort dependicies
+for i in snort make gcc flex bison libpcap-dev
+do
+	apt-get install $i -y;
+done
+
+if [ ! -d /opt/daq-2.0.4/ ]; then
+
+	wget -O /opt/daq-2.0.4.tar.gz https://www.snort.org/downloads/snort/daq-2.0.4.tar.gz
+	tar xvfz /opt/daq-2.0.4.tar.gz -C /opt
+	cd /opt/daq-2.0.4
+	./configure; make; make install
+	#uncomment output alert
+	sed -i 's/# output alert_syslog: LOG_AUTH LOG_ALERT/output alert_syslog: LOG_AUTH LOG_ALERT/g' /etc/snort/snort.conf
+
+	sed -i "s/^include\ \$RULE_PATH/#include\ \$RULE_PATH/g" /etc/snort/snort.conf
+	
+	sed -i "s|^#include \$RULE_PATH/local.rules|include \$RULE_PATH/local.rules|g" /etc/snort/snort.conf
+
+	sed -i 's/output unified2: filename snort.log, limit 128, nostamp, mpls_event_types, vlan_event_types/output unified2: filename snort.log, limit 128, mpls_event_types, vlan_event_types/g' /etc/snort/snort.conf
+
+
+	echo -e "alert icmp any any -> \$HOME_NET any (msg:\"ICMP Test NOW! \"; classtype:not-suspicious; sid:1000001; rev:1;)" >> /etc/snort/rules/local.rules
+
+
+	rm /var/log/snort/snort.log
+	rm -r /opt/daq-2.0.4.tar.gz
+	service snort restart; cd
+fi;
+
+
+
+#Barnyard
+
+for i in autoconf libtool build-essential libmysqld-dev checkinstall git
+do
+	apt-get install $i -y;
+done
+
+if [ ! -d /opt/libdnet-1.12/ ]; then
+
+	wget -O /opt/libdnet-1.12.tgz https://libdnet.googlecode.com/files/libdnet-1.12.tgz
+	tar xvfz /opt/libdnet-1.12.tgz -C /opt
+	cd /opt/libdnet-1.12/
+	./configure; make; checkinstall
+	dpkg -i /opt/libdnet_1.12-1_amd64.deb
+	rm -r /opt/libdnet-1.12.tgz; cd
+fi;
+
+if [ ! -d /usr/src/barnyard2/ ]; then
+	cd /usr/src; git clone git://github.com/firnsy/barnyard2.git
+	cd barnyard2
+
+	for i in "./autogen.sh" "autoreconf -fvi -I ./m4" "./configure --with-mysql --with-mysql-libraries=/usr/lib/x86_64-linux-gnu" "make" "make install" "cp /usr/local/etc/barnyard2.conf /etc/snort" "cp schemas/create_mysql /usr/src" "mkdir /var/log/barnyard2"
+	do
+		$i;
+	done
+
+	#Barnyard configure
+
+	sed -i 's/output alert_fast: stdout/output alert_fast/g' /etc/snort/barnyard2.conf
+
+	sed -i 's/#   output database: log, mysql, user=root password=test dbname=db host=localhost/output database: log, mysql, user=snort password=password dbname=snort host=localhost/g' /etc/snort/barnyard2.conf
+
+	cd /usr/share/oinkmaster
+	bash -c "sudo ./create-sidmap.pl /etc/snort/rules > /etc/snort/sid-msg.map"
+fi;
+
+
+#mysql install
+
+cd; apt-get install mysql-server -y
+
+if [ ! -d /var/lib/mysql/snort ]; then
+	for mysqlCommand in "create database snort;" "create database archive;" "grant usage on snort.* to snort@localhost;" "grant usage on archive.* to snort@localhost;" "set password for snort@localhost=PASSWORD('password');" "grant all privileges on snort.* to snort@localhost;" "grant all privileges on archive.* to snort@localhost;" "flush privileges;" "use snort;" "source /usr/src/create_mysql;"
+	do
+		    echo $mysqlCommand >> mysqlCommands
+	done
+#	echo "---------------------------------------------------"
+#	echo "  About to change MySQL, enter MySQL credentials."
+#	echo "---------------------------------------------------"
+	mysql -u root -p --password='password'<mysqlCommands
+	rm mysqlCommands
+
+
+fi;
+
+
+#Python install
+
+for i in python-pip python-mysqldb
+do
+	apt-get install $i -y;
+done
+
+for i in python-iptables
+do
+	pip install $i;
+done
+service snort restart
+
+echo "Done!"
+
+
+#--------------------------------------
+# To test barnyard, run testbarnyard.sh
+# that will generated automatically
+
+BARNFILE=testbarnyard.sh
+if [ ! -f $BARNFILE ]; then
+
+	echo -e '#!/bin/bash \nsudo /usr/local/bin/barnyard2 -c /etc/snort/barnyard2.conf -d /var/log/snort -f snort.log -w /var/log/barnyard2/bylog.waldo -C /etc/snort/classification.config' >> $BARNFILE
+	chmod +x $BARNFILE
+else 
+	echo "file: $BARNFILE already exists. Test file not created."
+fi;
+
+
+
+#sed -i "s/^include\ \$RULE_PATH/#include\ \$RULE_PATH/g" snort.conf 
+
+
+
+
+
+
+
+
+
+
