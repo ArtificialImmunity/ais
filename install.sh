@@ -12,6 +12,10 @@
 # "--------------------------------------------------"
 
 
+#TODO:
+#set crontab for python
+#add barnyard to start at boot
+#add extra rules for SSH and HTTP etc
 
 apt-get update -y; apt-get upgrade -y;
 
