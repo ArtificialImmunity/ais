@@ -28,5 +28,8 @@ The installation script will:
     <li>Create a 'Testbarnyard.sh' file, which will run barnyard to log to packets MySQL</li>
     
 
+Next, set a crontab timer for the python code, 'agent.py'.
 
+
+<code>#to edit the crontab file\ncrontab -e</code>
 
