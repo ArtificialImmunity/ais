@@ -1,7 +1,7 @@
 # ais
-Artifical Immune System for Linux Servers
+<h1>Artifical Immune System for Linux Servers<h1>
 
-Author: Jordan Bruce
+Author: <i>Jordan Bruce</i>
 
 This is a final year project for University. It is a simple ais system which can be installed on a node in a network. For testing purposes I have been using an Ubuntu Server 14.0.4 LTS. 
 
