@@ -18,7 +18,7 @@ Now all the serious stuff is out the way. You can download the git repository:
 And run the installation script:
 (takes ~4mins and ~400MB)
 
-<code>cd ais/</code>
+<code>cd /path/to/ais/</code>
 
 <code>sudo ./install.sh</code>
 
@@ -30,6 +30,22 @@ The installation script will:
 
 Next, set a crontab timer for the python code, 'agent.py'.
 
+<code>crontab -e</code>
 
-<code>#to edit the crontab file\ncrontab -e</code>
+Append to the file:
+
+<code>* * * * * /path/to/ais/agent.py</code>
+
+You can now run the 'Testbarnyard.sh' in the back ground.
+
+The testbarnyard logs ICMP (ping) packets to the database while the agent.py runs every 60 seconds to read from the database. If a user has more than 10 ping requests in the past 60 seconds, their IP src Address will be put on a ban list using IPTables.
+
+
+<h3>To Do:<h3>
+
+I still need to impliment more rules for barnyard to log. This will inculde, SSH Auth Failure, HTTP 404, nmap scans. This is then need more python code to check for and block IPs. The logic will be the same with all of them.
+
+I would like to impliment a way to also log system data. This will look for things like, failed changing to root user, failed running programs as root, creating new accounts.
+
+A central collector also needs to be implimented. After to 60 seconds of python parsing, it should send the data to a central MySQL database and then flush to local database. When all nodes do this, the collector can make decisions based on a group decision e.g. one IP has been blocked on the same network by x nodes, so ban IP on all other nodes, as traffic is most likely malicious. 
 
