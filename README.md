@@ -14,10 +14,17 @@ It will capture all network traffic and log it to a local mysql database. Every 
 
 Now all the serious stuff is out the way. You can download the git repository:
 
-<code>wget https://github.com/ArtificialImmunity/ais</code>
+<code>git clone https://github.com/ArtificialImmunity/ais</code>
 
 And run the installation script:
 
 <code>cd ais/</code>
+
 <code>sudo ./install.sh</code>
+
+The installation script will:
+<li>Install dependincies for Snort, Barnyard, MySQL, and Python</li>
+<li>Configure nessiscary files for the aforementioned programs</li>
+<li>Create a 'Testbarnyard.sh. file, which will run barnyard to log to packets MySQL</li>
+
 
