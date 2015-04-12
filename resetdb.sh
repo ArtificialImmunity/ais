@@ -1,5 +1,8 @@
 #!/bin/bash
 
+#Botched script to reset the database for testing purposes.
+
+
 if [ -d /var/lib/mysql/snort ]; then
 
 		for mysqlCommand in "drop database snort;" "drop database archive"
