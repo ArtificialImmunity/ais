@@ -23,7 +23,7 @@ And run the installation script:
 <code>sudo ./install.sh</code>
 
 The installation script will:
-    <\t><li>Install dependincies for Snort, Barnyard, MySQL, and Python</li>
+    <li>Install dependincies for Snort, Barnyard, MySQL, and Python</li>
     <li>Configure nessiscary files for the aforementioned programs</li>
     <li>Create a 'Testbarnyard.sh' file, which will run barnyard to log to packets MySQL</li>
     
