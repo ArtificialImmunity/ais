@@ -9,3 +9,15 @@ It will capture all network traffic and log it to a local mysql database. Every 
 
 <h2>To set up<h2>
 
+<b>It is STRONGLY recommended that you only install this if you are using a fresh install of Ubuntu Server and that you know what the code is doing.</b>
+<i>An uninstall script has not been created, and as such, I will not be held responsible for any changes you make to you own system as a result of this code</i>
+
+Now all the serious stuff is out the way. You can download the git repository:
+
+<code>wget https://github.com/ArtificialImmunity/ais</code>
+
+And run the installation script:
+
+<code>cd ais/</code>
+<code>sudo ./install.sh</code>
+
