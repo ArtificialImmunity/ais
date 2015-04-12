@@ -135,17 +135,3 @@ if [ ! -f $BARNFILE ]; then
 else 
 	echo "file: $BARNFILE already exists. Test file not created."
 fi;
-
-
-
-#sed -i "s/^include\ \$RULE_PATH/#include\ \$RULE_PATH/g" snort.conf 
-
-
-
-
-
-
-
-
-
-
