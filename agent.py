@@ -12,13 +12,15 @@ ips = {'127.0.0.1' : 0}
 thisIP = '192.168.224.137'
 banIP = []
 
-
+#Convert hex to string (used for packet analysis)
 def hexToString(data):
     return ''.join(chr(int(data[i:i+2], 16)) for i in range(0, len(data), 2))
 
+#Converts ip from 32 bit integer to 4 dotted octets
 def ipDecToOct(data):
     t = struct.pack("!I", data)
     return socket.inet_ntoa(t)
+
 
 def getSrcCount():
     for ip in allIP: #cycle through all ips found
@@ -28,6 +30,7 @@ def getSrcCount():
             ips[ip] = 1 #else create new dict entry
     return
 
+#Old ip function with limit instead of time
 def updateIPs():
     con = MySQLdb.Connection(host='localhost', user='root', passwd='password', db='snort')
 
@@ -48,13 +51,15 @@ def updateIPs():
         con.close()
     return
 
+#Puts ip in ban list if number of ping requests is over the threshold
 def icmpPingFlood():
+    threshold = 10
     for ip in ips:
-        if ips[ip] > 10:
+        if ips[ip] > threshold:
             banIP.append(ip)
 
+#Adds rule to IPTables if ip is in the ban list
 def banICMPFlood():
-
     for ip in banIP:
         chain = iptc.Chain(iptc.Table(iptc.Table.FILTER), "INPUT")
         rule = iptc.Rule()
@@ -65,8 +70,8 @@ def banICMPFlood():
         rule.target = target
         chain.insert_rule(rule)
 
-
-def packetsPast15Sec():
+#Gets all ICMP packets from database (from snort alerts)
+def fetchIPs():
     con = MySQLdb.Connection(host='localhost', user='root', passwd='password', db='snort')
 
     cur = con.cursor()
@@ -88,18 +93,19 @@ def packetsPast15Sec():
     return
 
 
+
 def main():
-    print "Fetching MySQL entries from last 15 sec"
-    packetsPast15Sec()
-    print "Caclulating IP ICMP quantity"
+    print "Fetching MySQL entries..."
+    fetchIPs()
+    print "Caclulating IP ICMP quantity..."
     getSrcCount()
-    print "All IPs with ICMP amount:"
+    print "- All IPs with ICMP amount -"
     print ips
-    print "Adding IPs to ban list"
+    print "Adding IPs to ban list..."
     icmpPingFlood()
-    print "Banned IPs"
+    print "- Banned IPs -"
     print banIP
-    print "Adding iptables rules for banned IPs"
+    print "Adding iptables rules for banned IPs..."
     banICMPFlood()
     print "Done"
 
