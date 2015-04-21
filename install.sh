@@ -60,7 +60,7 @@ done
 
 if [ ! -d /opt/libdnet-1.12/ ]; then
 
-	wget -O /opt/libdnet-1.12.tgz https://libdnet.googlecode.com/files/libdnet-1.12.tgz
+	wget -O /opt/libdnet-1.12.tgz https://libdnet.googlecode.com/files/libdnet-1.12.tgz --no-check-certificate
 	tar xvfz /opt/libdnet-1.12.tgz -C /opt
 	cd /opt/libdnet-1.12/
 	./configure; make; checkinstall
