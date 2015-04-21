@@ -145,6 +145,10 @@ echo "Done!"
 
 #crontab
 
+crontab -l > mycrontab
+echo "* * * * * /hone/$USER/ais/agent.py" >> mycrontab
+crontab mycrontab
+rm mycrontab
 
 
 #--------------------------------------
