@@ -72,10 +72,13 @@ if [ ! -d /usr/src/barnyard2/ ]; then
 	cd /usr/src; git clone git://github.com/firnsy/barnyard2.git
 	cd barnyard2
 
-	for i in "./autogen.sh" "autoreconf -fvi -I ./m4" "./configure --with-mysql --with-mysql-libraries=/usr/lib/x86_64-linux-gnu" "make" "make install" "cp /usr/local/etc/barnyard2.conf /etc/snort" "cp schemas/create_mysql /usr/src" "mkdir /var/log/barnyard2"
-	do
-		$i;
-	done
+	./autogen.sh
+	autoreconf -fvi -I ./m4
+	./configure --with-mysql --with-mysql-libraries=/usr/lib/x86_64-linux-gnu
+	make; make install
+	cp /usr/local/etc/barnyard2.conf /etc/snort
+	cp schemas/create_mysql /usr/src
+	mkdir /var/log/barnyard2
 
 	#Barnyard configure
 
@@ -92,8 +95,10 @@ fi;
 
 cd; apt-get install mysql-server -y
 
-if [ ! -d /var/lib/mysql/snort ]; then
-	for mysqlCommand in "create database snort;" "create database archive;" "grant usage on snort.* to snort@localhost;" "grant usage on archive.* to snort@localhost;" "set password for snort@localhost=PASSWORD('password');" "grant all privileges on snort.* to snort@localhost;" "grant all privileges on archive.* to snort@localhost;" "flush privileges;" "use snort;" "source /usr/src/create_mysql;"
+#Snort MySQL set up
+
+if [ ! -d /var/lib/mysql/snort ] && [ -f usr/src/create_mysql ]; then
+	for mysqlCommand in "CREATE DATABASE snort;" "CREATE DATABASE archive;" "GRANT USAGE ON snort.* to snort@localhost;" "GRANT USAGE ON archive.* to snort@localhost;" "set password for snort@localhost=PASSWORD('password');" "GRANT ALL PRIVILEGES ON snort.* to snort@localhost;" "GRANT ALL PRIVILEGES ON archive.* to snort@localhost;" "FLUSH PRIVILEGES;" "USE snort;" "SOURCE /usr/src/create_mysql;"
 	do
 		    echo $mysqlCommand >> mysqlCommands
 	done
@@ -106,14 +111,29 @@ if [ ! -d /var/lib/mysql/snort ]; then
 
 fi;
 
+#SysLog MySQL set up
+
+if [ ! -d /var/lib/mysql/syslog ] && [ -f create_mysql_syslog ]; then
+
+    for mysqlCommand in "CREATE DATABASE syslog;" "CREATE USER 'syslog'@'localhost' IDENTIFIED BY 'password';" "GRANT USAGE ON syslog.* to syslog@localhost;" "GRANT ALL PRIVILEGES ON syslog.* to syslog@localhost;" "FLUSH PRIVILEGES;" "USE syslog;" "SOURCE create_mysql_syslog;"
+    do
+            echo $mysqlCommand >> mysqlCommands
+    done
+    mysql -u root -p --password='password'<mysqlCommands
+    rm mysqlCommands
+fi;
+
+
 
 #Python install
 
+#apt-get install
 for i in python-pip python-mysqldb
 do
 	apt-get install $i -y;
 done
 
+#pip install
 for i in python-iptables
 do
 	pip install $i;
@@ -121,6 +141,10 @@ done
 service snort restart
 
 echo "Done!"
+
+
+#crontab
+
 
 
 #--------------------------------------
