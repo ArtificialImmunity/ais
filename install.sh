@@ -144,9 +144,9 @@ echo "Done!"
 
 
 #crontab
-crontab -l > mycrontab
-echo "* * * * * /hone/ubuntu/ais/agent.py" > mycrontab
-crontab mycrontab
+crontab -l -u ubuntu > mycrontab
+echo "* * * * * /hone/ubuntu/ais/agent.py" >> mycrontab
+crontab -u ubuntu mycrontab
 rm mycrontab
 
 
