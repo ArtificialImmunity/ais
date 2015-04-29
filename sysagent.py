@@ -4,11 +4,13 @@ import sys
 from datetime import datetime
 import iptc
 
+#This is the agent coding for the raw system monitoring side of the ais
+#It uses Linux log files and system data to determine bad traffic
 
 #crontab runs on the minute
 #this get the minute that it just was
 now = datetime.now()
-currentMinute = now.minute
+currentMinute = now.minute-1
 
 #class containing sensor and actuator methods for 404 not found errors
 class Error404():

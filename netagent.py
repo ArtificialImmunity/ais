@@ -1,6 +1,9 @@
 #!/usr/bin/python
 # -*- coding: utf-8 -*-
 
+#This is the agent coding for the raw networking side of the ais
+#It uses the snort rules and MySQL database to determine bad traffic
+
 import MySQLdb
 import sys
 import struct
