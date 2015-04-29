@@ -5,13 +5,11 @@ from datetime import datetime
 import iptc
 
 
-
-
-
 #crontab runs on the minute
 #this get the minute that it just was
 now = datetime.now()
 currentMinute = now.minute
+
 
 class Error404():
 
@@ -48,7 +46,7 @@ class Error404():
                 self.ips404[allips] = 1 #else create new dict entry
         return
 
-    #Puts ip in ban list if number of ping requests is over the threshold
+    #Puts ip into ban list if number of ping requests is over the threshold
     def dirScan(self):
         threshold = 1 #threshold for 404 errors allowed per minute
         for ip in self.ips404:
@@ -71,6 +69,8 @@ class Error404():
             target = iptc.Target(rule, "DROP")
             rule.target = target
             chain.insert_rule(rule)
+error404 = Error404()
+
 
 class SSHAuthFail():
 
@@ -125,18 +125,34 @@ class SSHAuthFail():
             target = iptc.Target(rule, "DROP")
             rule.target = target
             chain.insert_rule(rule)
+sshAuthFail = SSHAuthFail()
+
+
+class Sensor():
+
+    def sense(self):
+        error404.get404()
+        error404.dirScan()
+
+        sshAuthFail.getSSHAuthFail()
+        sshAuthFail.SSHBruteForce()
+        return
+
+class Actuator():
+
+    def actuate(self):
+        error404.ban404Scan()
+
+        sshAuthFail.banSSH()
+        return
 
 def main():
 
-    error404 = Error404()
-    error404.get404()
-    error404.dirScan()
-    error404.ban404Scan()
+    sensor = Sensor()
+    sensor.sense()
 
-    sshAuthFail = SSHAuthFail()
-    sshAuthFail.getSSHAuthFail()
-    sshAuthFail.SSHBruteForce()
-    sshAuthFail.banSSH()
+    actuator= Actuator()
+    actuator.actuate()
 
     print "404 ips = "
     print error404.ips404
