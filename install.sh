@@ -146,10 +146,12 @@ echo "Done!"
 
 
 #crontab
-crontab -l -u ubuntu > mycrontab
-echo "* * * * * /hone/ubuntu/ais/agent.py" >> mycrontab
-crontab -u ubuntu mycrontab
-rm mycrontab
+CRONFILE=mycrontab
+crontab -l > $CRONFILE
+echo "* * * * * /home/ubuntu/ais/netagent.py" >> $CRONFILE
+echo "* * * * * /home/ubuntu/ais/sysagent.py" >> $CRONFILE
+crontab $CRONFILE
+rm $CRONFILE
 
 
 #--------------------------------------

@@ -71,7 +71,7 @@ class Error404():
             rule.target = target
             chain.insert_rule(rule)
         return
-error404 = Error404()
+error404 = Error404() #initalise
 
 #class containing sensor and actuator methods for ssh auth failures
 class SSHAuthFail():
@@ -132,7 +132,7 @@ class SSHAuthFail():
             rule.target = target
             chain.insert_rule(rule)
         return
-sshAuthFail = SSHAuthFail()
+sshAuthFail = SSHAuthFail() #initalise
 
 #class containing sensor methods for all rules
 class Sensor():
