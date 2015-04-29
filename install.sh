@@ -62,7 +62,7 @@ done
 
 if [ ! -d /opt/libdnet-1.12/ ]; then
 
-	wget -O /opt/libdnet-1.12.tgz https://libdnet.googlecode.com/files/libdnet-1.12.tgz
+	wget -O /opt/libdnet-1.12.tgz https://libdnet.googlecode.com/files/libdnet-1.12.tgz --no-check-certificate
 	tar xvfz /opt/libdnet-1.12.tgz -C /opt
 	cd /opt/libdnet-1.12/
 	./configure; make; checkinstall
@@ -146,10 +146,9 @@ echo "Done!"
 
 
 #crontab
-
-crontab -l > mycrontab
-echo "* * * * * /hone/$USER/ais/agent.py" >> mycrontab
-crontab mycrontab
+crontab -l -u ubuntu > mycrontab
+echo "* * * * * /hone/ubuntu/ais/agent.py" >> mycrontab
+crontab -u ubuntu mycrontab
 rm mycrontab
 
 
