@@ -10,12 +10,12 @@ import iptc
 now = datetime.now()
 currentMinute = now.minute
 
-
+#class containing sensor and actuator methods for 404 not found errors
 class Error404():
 
-    allIP404 = []
-    ips404 = {'127.0.0.1' : 0}
-    banIP404 = []
+    allIP404 = [] #list for all ips found with 404 errors
+    ips404 = {'127.0.0.1' : 0} #dict for all ips found, with number of occurances
+    banIP404 = [] #list for all ips who number of occurances exceed threshold
 
     #Gets all 404 errors in the past minute from /var/log/apache2/access.log
     def get404(self):
@@ -52,8 +52,9 @@ class Error404():
         for ip in self.ips404:
             if self.ips404[ip] > threshold:#if ip 404 errors is over threshold, add to ban list
                 self.banIP404.append(ip)
+        return
 
-    #Bans all IP in ban IP list
+    #Creates iptables rules to ban all ips in ban ip list
     def ban404Scan(self):
         #cycle through ban list
         for ip in self.banIP404:
@@ -69,15 +70,17 @@ class Error404():
             target = iptc.Target(rule, "DROP")
             rule.target = target
             chain.insert_rule(rule)
+        return
 error404 = Error404()
 
-
+#class containing sensor and actuator methods for ssh auth failures
 class SSHAuthFail():
 
-    allIPSSH = []
-    ipsSSH = {'127.0.0.1' : 0}
-    banIPSSH = []
+    allIPSSH = [] #list for all ips found with SSH auth failures
+    ipsSSH = {'127.0.0.1' : 0} #dict for all ips found, with number of occurances
+    banIPSSH = [] #list for all ips who number of occurances exceed threshold
 
+    #Gets all SSH auth fails and puts respective Ips in allIPSSH
     def getSSHAuthFail(self):
         for lines in reversed(open("/var/log/auth.log", "r").readlines()): #cycle through lines of ssh authentication log.
             if 'sshd' in lines:
@@ -102,6 +105,7 @@ class SSHAuthFail():
                 self.ipsSSH[allips] = self.ipsSSH[allips] + 1 #count No times for each ip
             else:
                 self.ipsSSH[allips] = 1 #else create new dict entry
+        return
 
     #Puts ip in ban list if number of ping requests is over the threshold
     def SSHBruteForce(self):
@@ -109,7 +113,9 @@ class SSHAuthFail():
         for ip in self.ipsSSH:
             if self.ipsSSH[ip] > threshold:#if ip 404 errors is over threshold, add to ban list
                 self.banIPSSH.append(ip)
+        return
 
+    #Creates iptables rules to ban all ips in ban ip list
     def banSSH(self):
         #cycle through ban list
         for ip in self.banIPSSH:
@@ -125,9 +131,10 @@ class SSHAuthFail():
             target = iptc.Target(rule, "DROP")
             rule.target = target
             chain.insert_rule(rule)
+        return
 sshAuthFail = SSHAuthFail()
 
-
+#class containing sensor methods for all rules
 class Sensor():
 
     def sense(self):
@@ -138,6 +145,7 @@ class Sensor():
         sshAuthFail.SSHBruteForce()
         return
 
+#class containing actuator methods for all rules
 class Actuator():
 
     def actuate(self):
