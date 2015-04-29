@@ -8,9 +8,3 @@ CREATE TABLE newuser ( id       INT          UNSIGNED NOT NULL AUTO_INCREMENT,
                          GID  INT    UNSIGNED NOT NULL,
                          timecreated 	   DATETIME NOT NULL,
                          PRIMARY KEY (id));
-
-CREATE TABLE error404 ( id       INT          UNSIGNED NOT NULL AUTO_INCREMENT,
-                         ip_src      INT      UNSIGNED NOT NULL,
-                         ip_dst      INT      UNSIGNED NOT NULL,
-                         timestamp 	   DATETIME NOT NULL,
-                         PRIMARY KEY (id));
