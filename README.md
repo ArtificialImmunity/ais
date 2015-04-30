@@ -26,26 +26,18 @@ The installation script will:
     <li>Install dependincies for Snort, Barnyard, MySQL, and Python</li>
     <li>Configure nessiscary files for the aforementioned programs</li>
     <li>Create a 'Testbarnyard.sh' file, which will run barnyard to log to packets MySQL</li>
-    
+    <li>Set crontab timers for netagent.py and sysagent.py</li>
 
-Next, set a crontab timer for the python code, 'agent.py'.
+You can now run the 'testbarnyard.sh' in the back ground.
 
-<code>crontab -e</code>
+<code>sudo ./testbarnyard.sh &</code>
 
-Append to the file:
+The 'testbarnyard.sh' file will run snort and barnyard2 to monitor and collect network traffic to the MySQL database accoring to the snort rules.
 
-<code>* * * * * /path/to/ais/agent.py</code>
-
-You can now run the 'Testbarnyard.sh' in the back ground.
-
-The testbarnyard logs ICMP (ping) packets to the database while the agent.py runs every 60 seconds to read from the database. If a user has more than 10 ping requests in the past 60 seconds, their IP src Address will be put on a ban list using IPTables.
+The netagent.py and sysagent.py will be added to the crontab and ran on the minute, every minute
 
 
 <h3>To Do:<h3>
-
-I still need to impliment more rules for barnyard to log. This will inculde, SSH Auth Failure, HTTP 404, nmap scans. This is then need more python code to check for and block IPs. The logic will be the same with all of them.
-
-I would like to impliment a way to also log system data. This will look for things like, failed changing to root user, failed running programs as root, creating new accounts.
 
 A central collector also needs to be implimented. After to 60 seconds of python parsing, it should send the data to a central MySQL database and then flush to local database. When all nodes do this, the collector can make decisions based on a group decision e.g. one IP has been blocked on the same network by x nodes, so ban IP on all other nodes, as traffic is most likely malicious. 
 
