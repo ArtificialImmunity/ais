@@ -79,29 +79,33 @@ class PingFlood:
             target = iptc.Target(rule, "DROP")
             rule.target = target
             chain.insert_rule(rule)
-
-
+        return
 pingFlood = PingFlood()
 
+#class containing sensor methods for all rules
 class Sensor:
-
     def sense(self):
         pingFlood.fetchIPs()
         pingFlood.getSrcCount()
         pingFlood.icmpPingFlood()
+        return
 
+#class containing actuator methods for all rules
 class Actuator:
-
     def actuate(self):
         pingFlood.banICMPFlood()
-
-
-
+        return
 
 
 
 
 def main():
+
+    sensor = Sensor()
+    sensor.sense()
+
+    actuator= Actuator()
+    actuator.actuate()
 
     print "- All IPs with ICMP amount -"
     print pingFlood.ips
