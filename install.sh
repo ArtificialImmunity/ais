@@ -104,13 +104,8 @@ if [ ! -d /var/lib/mysql/snort ]; then
 	do
 		    echo $mysqlCommand >> mysqlCommands
 	done
-#	echo "---------------------------------------------------"
-#	echo "  About to change MySQL, enter MySQL credentials."
-#	echo "---------------------------------------------------"
 	mysql -u root -p --password='password'<mysqlCommands
 	rm mysqlCommands
-
-
 fi;
 
 #SysLog MySQL set up

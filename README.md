@@ -23,16 +23,16 @@ And run the installation script:
 <code>sudo ./install.sh</code>
 
 The installation script will:
-    <li>Install dependincies for Snort, Barnyard, MySQL, and Python</li>
-    <li>Configure nessiscary files for the aforementioned programs</li>
-    <li>Create a 'Testbarnyard.sh' file, which will run barnyard to log to packets MySQL</li>
+    <li>Install dependencies for Snort, Barnyard, MySQL, and Python</li>
+    <li>Configure necessary files for the aforementioned programs</li>
+    <li>Create a 'startbarnyard.sh' file, which will run barnyard to log to packets MySQL</li>
     <li>Set crontab timers for netagent.py and sysagent.py</li>
 
-You can now run the 'testbarnyard.sh' in the back ground.
+You can now run the 'startbarnyard.sh' 
 
-<code>sudo ./testbarnyard.sh &</code>
+<code>sudo ./startbarnyard.sh</code>
 
-The 'testbarnyard.sh' file will run snort and barnyard2 to monitor and collect network traffic to the MySQL database accoring to the snort rules.
+The 'startbarnyard.sh' file will run snort and barnyard2 to monitor and collect network traffic to the MySQL database accoring to the snort rules.
 
 The netagent.py and sysagent.py will be added to the crontab and ran on the minute, every minute
 

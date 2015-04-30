@@ -19,11 +19,11 @@ class PingFlood:
     thisIP = '192.168.224.137'
 
     #Convert hex to string (used for packet analysis)
-    def hexToString(data):
+    def hexToString(self, data):
         return ''.join(chr(int(data[i:i+2], 16)) for i in range(0, len(data), 2))
 
     #Converts ip from 32 bit integer to 4 dotted octets
-    def ipDecToOct(data):
+    def ipDecToOct(self, data):
         t = struct.pack("!I", data)
         return socket.inet_ntoa(t)
 
@@ -97,8 +97,6 @@ class Actuator:
         return
 
 
-
-
 def main():
 
     sensor = Sensor()
@@ -107,10 +105,10 @@ def main():
     actuator= Actuator()
     actuator.actuate()
 
-    print "- All IPs with ICMP amount -"
-    print pingFlood.ips
+    #print "- All IPs with ICMP amount -"
+    #print pingFlood.ips
 
-    print "Done"
+    #print "Done"
 
     return
 

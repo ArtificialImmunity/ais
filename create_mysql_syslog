@@ -2,9 +2,25 @@
 
 #MySQL commands to create tables to log Linux system info updates to
 
-CREATE TABLE newuser ( id       INT          UNSIGNED NOT NULL AUTO_INCREMENT,
-                         username     VARCHAR(255) NOT NULL,
-                         UID  INT    UNSIGNED NOT NULL,
-                         GID  INT    UNSIGNED NOT NULL,
-                         timecreated 	   DATETIME NOT NULL,
+
+
+CREATE TABLE error404 ( id       INT          UNSIGNED NOT NULL AUTO_INCREMENT,
+                         ip_src      INT      UNSIGNED NOT NULL,
+                         ip_dst      INT      UNSIGNED NOT NULL,
+                         timestamp 	   DATETIME NOT NULL,
                          PRIMARY KEY (id));
+
+
+CREATE TABLE sshFailedAuth ( id       INT          UNSIGNED NOT NULL AUTO_INCREMENT,
+                         ip_src      INT      UNSIGNED NOT NULL,
+                         ip_dst      INT      UNSIGNED NOT NULL,
+                         timestamp 	   DATETIME NOT NULL,
+                         PRIMARY KEY (id));
+
+
+#CREATE TABLE newuser ( id       INT          UNSIGNED NOT NULL AUTO_INCREMENT,
+#                         username     VARCHAR(255) NOT NULL,
+#                         UID  INT    UNSIGNED NOT NULL,
+#                         GID  INT    UNSIGNED NOT NULL,
+#                         timecreated 	   DATETIME NOT NULL,
+#                         PRIMARY KEY (id));

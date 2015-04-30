@@ -21,31 +21,35 @@ class Error404():
 
     #Gets all 404 errors in the past minute from /var/log/apache2/access.log
     def get404(self):
-         #cycle through lines of apache2 access log in reverse order
-        for lines in reversed(open("/var/log/apache2/access.log", "r").readlines()):
-            #search apache log for 404 errors
-            if '404' in lines:
-                line = lines.split(" ")
-                time = line[3].split(":")
-                #get the minute the log was made
-                minute = int(time[2])
 
-                #print "Minute = " + str(minute)
-                #print "Current Minute = " + str(currentMinute)
+        try:
+             #cycle through lines of apache2 access log in reverse order
+            for lines in reversed(open("/var/log/apache2/access.log", "r").readlines()):
+                #search apache log for 404 errors
+                if '404' in lines:
+                    line = lines.split(" ")
+                    time = line[3].split(":")
+                    #get the minute the log was made
+                    minute = int(time[2])
 
-                #if it's over the last 60 seconds, break
-                if currentMinute != minute:
-                    break
+                    #print "Minute = " + str(minute)
+                    #print "Current Minute = " + str(currentMinute)
+
+                    #if it's over the last 60 seconds, break
+                    if currentMinute != minute:
+                        break
+                    else:
+                        #else put the 404 error ip in ip list
+                        self.allIP404.append(line[0])
+
+
+            for allips in self.allIP404: #cycle through all ips found
+                if allips in self.ips404:
+                    self.ips404[allips] = self.ips404[allips] + 1 #count No times for each ip
                 else:
-                    #else put the 404 error ip in ip list
-                    self.allIP404.append(line[0])
-
-
-        for allips in self.allIP404: #cycle through all ips found
-            if allips in self.ips404:
-                self.ips404[allips] = self.ips404[allips] + 1 #count No times for each ip
-            else:
-                self.ips404[allips] = 1 #else create new dict entry
+                    self.ips404[allips] = 1 #else create new dict entry
+        except IOError:
+            pass
         return
 
     #Puts ip into ban list if number of ping requests is over the threshold
@@ -84,29 +88,32 @@ class SSHAuthFail():
 
     #Gets all SSH auth fails and puts respective Ips in allIPSSH
     def getSSHAuthFail(self):
-        for lines in reversed(open("/var/log/auth.log", "r").readlines()): #cycle through lines of ssh authentication log.
-            if 'sshd' in lines:
-                if 'Failed' in lines:
-                    line = lines.split(" ")
-                    time = line[2].split(":")
-                    #get the minute the log was made
-                    minute = int(time[1])
+        try:
+            for lines in reversed(open("/var/log/auth.log", "r").readlines()): #cycle through lines of ssh authentication log.
+                if 'sshd' in lines:
+                    if 'Failed' in lines:
+                        line = lines.split(" ")
+                        time = line[2].split(":")
+                        #get the minute the log was made
+                        minute = int(time[1])
 
-                    #print "Minute = " + str(minute)
-                    #print "Current Minute = " + str(currentMinute)
+                        #print "Minute = " + str(minute)
+                        #print "Current Minute = " + str(currentMinute)
 
-                    #if it's over the last 60 seconds, break
-                    if currentMinute != minute:
-                        break
-                    else:
-                        #else put the SSH Auth Fail ip in ip list
-                        self.allIPSSH.append(line[10])
+                        #if it's over the last 60 seconds, break
+                        if currentMinute != minute:
+                            break
+                        else:
+                            #else put the SSH Auth Fail ip in ip list
+                            self.allIPSSH.append(line[10])
 
-        for allips in self.allIPSSH: #cycle through all ips found
-            if allips in self.ipsSSH:
-                self.ipsSSH[allips] = self.ipsSSH[allips] + 1 #count No times for each ip
-            else:
-                self.ipsSSH[allips] = 1 #else create new dict entry
+            for allips in self.allIPSSH: #cycle through all ips found
+                if allips in self.ipsSSH:
+                    self.ipsSSH[allips] = self.ipsSSH[allips] + 1 #count No times for each ip
+                else:
+                    self.ipsSSH[allips] = 1 #else create new dict entry
+        except IOError:
+            pass
         return
 
     #Puts ip in ban list if number of ping requests is over the threshold
@@ -164,10 +171,10 @@ def main():
     actuator= Actuator()
     actuator.actuate()
 
-    print "404 ips = "
-    print error404.ips404
-    print "SSH ips = "
-    print sshAuthFail.ipsSSH
+    #print "404 ips = "
+    #print error404.ips404
+    #print "SSH ips = "
+    #print sshAuthFail.ipsSSH
     return
 
 
