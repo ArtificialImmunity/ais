@@ -152,17 +152,3 @@ echo "* * * * * /home/ubuntu/ais/netagent.py" >> $CRONFILE
 echo "* * * * * /home/ubuntu/ais/sysagent.py" >> $CRONFILE
 crontab $CRONFILE
 rm $CRONFILE
-
-
-#--------------------------------------
-# To test barnyard, run testbarnyard.sh
-# that will generated automatically
-
-BARNFILE=testbarnyard.sh
-if [ ! -f $BARNFILE ]; then
-
-	echo -e '#!/bin/bash \nsudo /usr/local/bin/barnyard2 -c /etc/snort/barnyard2.conf -d /var/log/snort -f snort.log -w /var/log/barnyard2/bylog.waldo -C /etc/snort/classification.config' >> $BARNFILE
-	chmod +x $BARNFILE
-else 
-	echo "file: $BARNFILE already exists. Test file not created."
-fi;
