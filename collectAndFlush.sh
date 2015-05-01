@@ -5,7 +5,7 @@
 
 #gets local data from mysql bannedips
 #sends to collector (192.168.224.139)
-mysqldump -t -h localhost -u root -ppassword banlist bannedIPs | mysql -h 192.168.224.139 -u root -ppassword banlist
+mysqldump -t -h localhost -u banlist -ppassword banlist bannedIPs | mysql -h 192.168.224.139 -u banlist -ppassword banlist
 
 
 #find the PID of the running barnyard instance
@@ -62,6 +62,16 @@ if [ ! -d /var/lib/mysql/syslog ]; then
     rm mysqlCommands
 fi;
 
+#Ban list MySQL set up
+
+if [ ! -d /var/lib/mysql/banlist ]; then
+    for mysqlCommand in "CREATE DATABASE banlist;" "GRANT USAGE ON banlist.* to banlist@localhost;" "GRANT ALL PRIVILEGES ON banlist.* to banlist@localhost;" "FLUSH PRIVILEGES;" "USE banlist;" "SOURCE /home/ubuntu/ais/create_mysql_banlist;"
+    do
+            echo $mysqlCommand >> mysqlCommands
+    done
+    mysql -u root -p --password='password'<mysqlCommands
+    rm mysqlCommands
+fi;
 
 #Start snort up again
 service snort start
