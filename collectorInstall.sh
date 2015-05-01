@@ -23,12 +23,14 @@ fi;
 #get the current ip
 THISIP="$(ifconfig | grep -A 1 'eth0' | tail -1 | cut -d ':' -f 2 | cut -d ' ' -f 1)"
 
-#replace bind address to ip
+#replace bind address to current ip
+#This is needed so MySQL can be accessed over the internet
 sed -i "s/bind-address.*/bind-address=$THISIP/g" /etc/mysql/my.cnf
 
 
 sudo service mysql restart
 
+#added privlidges to access over the network
 echo "GRANT ALL ON banlist.* TO banlist@'%' IDENTIFIED BY 'password';" >> mysqlNetUsage
 echo "FLUSH PRIVILEGES" >> mysqlNetUsage
 mysql -u root -p --password='password'<mysqlNetUsage
