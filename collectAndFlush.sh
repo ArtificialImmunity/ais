@@ -1,11 +1,16 @@
 #!/bin/bash
 
-#Script to reset the database
-#Should be called once current MySQL data is sent to collector
+#Script to send banned ips to collect and flush to local database
+
+
+#gets local data from mysql bannedips
+#sends to collector (192.168.224.139)
+mysqldump -t -h localhost -u root -ppassword banlist bannedIPs | mysql -h 192.168.224.139 -u root -ppassword banlist
+
 
 #find the PID of the running barnyard instance
 BARNYARDPID="$(ps axu | grep './startbarnyard.sh' | awk '{print $2}' | head -n 1)"
-#Kill barnyard so we can reset the database for flushing
+#Kill barnyard so we can reset the database
 kill $BARNYARDPID
 
 #stop snort so we can reset database and logs without errors
