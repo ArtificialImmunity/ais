@@ -110,7 +110,7 @@ fi;
 
 if [ ! -d /var/lib/mysql/syslog ]; then
     cd ais/
-    for mysqlCommand in "CREATE DATABASE syslog;" "CREATE USER 'syslog'@'localhost' IDENTIFIED BY 'password';" "GRANT USAGE ON syslog.* to syslog@localhost;" "GRANT ALL PRIVILEGES ON syslog.* to syslog@localhost;" "FLUSH PRIVILEGES;" "USE syslog;" "SOURCE create_mysql_syslog;"
+    for mysqlCommand in "CREATE DATABASE syslog;" "CREATE USER 'syslog'@'localhost' IDENTIFIED BY 'password';" "GRANT USAGE ON syslog.* to syslog@localhost;" "GRANT ALL PRIVILEGES ON syslog.* to syslog@localhost;" "FLUSH PRIVILEGES;" "USE syslog;" "SOURCE /home/ubuntu/ais/create_mysql_syslog;"
     do
             echo $mysqlCommand >> mysqlCommands
     done
