@@ -9,6 +9,7 @@ import sys
 import struct
 import socket
 import iptc
+from datetime import datetime
 
 
 class PingFlood:
@@ -17,6 +18,7 @@ class PingFlood:
     ipsPF = {'127.0.0.1' : 0} #dict for all ips found, with number of occurances
     banIPPF = [] #list for all ips who number of occurances exceed threshold
     thisIP = '192.168.224.137'
+    reason = "Ping Flood Attempt"
 
     #Convert hex to string (used for packet analysis)
     def hexToString(self, data):
@@ -26,6 +28,10 @@ class PingFlood:
     def ipDecToOct(self, data):
         t = struct.pack("!I", data)
         return socket.inet_ntoa(t)
+
+    #Converts string from dotted ip to 32 bit int
+    def octToIpDec(self, data):
+        return reduce(lambda a,b: a<<8 | b, map(int, data.split(".")))
 
 
     #Gets all ICMP packets from database (from snort alerts)
@@ -80,6 +86,24 @@ class PingFlood:
             rule.target = target
             chain.insert_rule(rule)
         return
+
+    #Adds ips in banIPPF to mysql
+    def updateBanList(self):
+
+        con = MySQLdb.Connection(host='localhost', user='root', passwd='password', db='banlist')
+
+        cur = con.cursor()
+
+        for ip in self.banIPPF:
+            #SQL query to INSERT all banned IPs into database .
+            cur.execute('''INSERT into bannedIPs (ip_src, ip_dst, reason, timestamp)\
+                        values (%s, %s, %s, now())''',(self.octToIpDec(ip), self.octToIpDec(self.thisIP), self.reason))
+
+            # Commit changes in the database
+            con.commit()
+
+        con.close()
+        return
 pingFlood = PingFlood()
 
 #class containing sensor methods for all rules
@@ -94,6 +118,7 @@ class Sensor:
 class Actuator:
     def actuate(self):
         pingFlood.banICMPFlood()
+        pingFlood.updateBanList()
         return
 
 
