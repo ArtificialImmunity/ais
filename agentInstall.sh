@@ -151,7 +151,8 @@ echo "Done!"
 #crontab
 CRONFILE=mycrontab
 crontab -l > $CRONFILE
-echo "* * * * * /home/ubuntu/ais/netagent.py" >> $CRONFILE
-echo "* * * * * /home/ubuntu/ais/sysagent.py" >> $CRONFILE
+echo "* * * * * /home/ubuntu/ais/netagent.py" >> $CRONFILE #look in db for snort rules and potentially ban ips
+echo "* * * * * /home/ubuntu/ais/sysagent.py" >> $CRONFILE #look at system data and potentially ban ips
+echo "* * * * * /home/ubuntu/ais/collectAndFlush.sh" >> $CRONFILE #send banlist to collector and flush local db
 crontab $CRONFILE
 rm $CRONFILE
