@@ -20,7 +20,12 @@ if [ ! -d /var/lib/mysql/banlist ]; then
     rm mysqlCommands
 fi;
 
-sed -i 's/bind-address            = 127.0.0.1/bind-address            = 192.168.224.139/g' /etc/mysql/my.cnf
+#get the current ip
+THISIP="$(ifconfig | grep -A 1 'eth0' | tail -1 | cut -d ':' -f 2 | cut -d ' ' -f 1)"
+
+#replace bind address to ip
+sed -i "s/bind-address.*/bind-address=$THISIP/g" /etc/mysql/my.cnf
+
 
 sudo service mysql restart
 
