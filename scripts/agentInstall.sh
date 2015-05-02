@@ -45,8 +45,8 @@ if [ ! -d /opt/daq-2.0.4/ ]; then
 
 
 	rm /var/log/snort/snort.log
-	rm -r /opt/daq-2.0.4.tar.gz
-	service snort restart; cd
+	rm -r /opt/daq-2.0.4.tar.gz; cd
+    service snort restart
 fi;
 
 
@@ -110,7 +110,7 @@ fi;
 
 if [ ! -d /var/lib/mysql/syslog ]; then
     cd ais/
-    for mysqlCommand in "CREATE DATABASE syslog;" "CREATE USER 'syslog'@'localhost' IDENTIFIED BY 'password';" "GRANT USAGE ON syslog.* to syslog@localhost;" "GRANT ALL PRIVILEGES ON syslog.* to syslog@localhost;" "FLUSH PRIVILEGES;" "USE syslog;" "SOURCE /home/ubuntu/ais/create_mysql_syslog;"
+    for mysqlCommand in "CREATE DATABASE syslog;" "CREATE USER 'syslog'@'localhost' IDENTIFIED BY 'password';" "GRANT USAGE ON syslog.* to syslog@localhost;" "GRANT ALL PRIVILEGES ON syslog.* to syslog@localhost;" "FLUSH PRIVILEGES;" "USE syslog;" "SOURCE /usr/local/src/ais/tablesmysql/create_mysql_syslog;"
     do
             echo $mysqlCommand >> mysqlCommands
     done
@@ -121,7 +121,7 @@ fi;
 #Ban list MySQL set up
 
 if [ ! -d /var/lib/mysql/banlist ]; then
-    for mysqlCommand in "CREATE DATABASE banlist;" "CREATE USER 'banlist'@'localhost' IDENTIFIED BY 'password';" "GRANT USAGE ON banlist.* to banlist@localhost;" "GRANT ALL PRIVILEGES ON banlist.* to banlist@localhost;" "FLUSH PRIVILEGES;" "USE banlist;" "SOURCE /home/ubuntu/ais/create_mysql_banlist_agent;"
+    for mysqlCommand in "CREATE DATABASE banlist;" "CREATE USER 'banlist'@'localhost' IDENTIFIED BY 'password';" "GRANT USAGE ON banlist.* to banlist@localhost;" "GRANT ALL PRIVILEGES ON banlist.* to banlist@localhost;" "FLUSH PRIVILEGES;" "USE banlist;" "SOURCE /usr/local/src/ais/tablesmysql/create_mysql_banlist_agent;"
     do
             echo $mysqlCommand >> mysqlCommands
     done
@@ -151,8 +151,8 @@ echo "Done!"
 #crontab
 CRONFILE=mycrontab
 crontab -l > $CRONFILE
-echo "* * * * * /home/ubuntu/ais/netagent.py" >> $CRONFILE #look in db for snort rules and potentially ban ips
-echo "* * * * * /home/ubuntu/ais/sysagent.py" >> $CRONFILE #look at system data and potentially ban ips
-echo "* * * * * /home/ubuntu/ais/collectAndFlush.sh" >> $CRONFILE #send banlist to collector and flush local db
+echo "* * * * * /usr/local/src/ais/agents/netagent.py" >> $CRONFILE #look in db for snort rules and potentially ban ips
+echo "* * * * * /usr/local/src/ais/agents/sysagent.py" >> $CRONFILE #look at system data and potentially ban ips
+echo "* * * * * /usr/local/src/ais/scripts/collectAndFlush.sh" >> $CRONFILE #send banlist to collector and flush local db
 crontab $CRONFILE
 rm $CRONFILE

@@ -12,7 +12,7 @@ cd; apt-get install mysql-server -y
 #Ban list MySQL set up
 
 if [ ! -d /var/lib/mysql/banlist ]; then
-    for mysqlCommand in "CREATE DATABASE banlist;" "CREATE USER 'banlist'@'localhost' IDENTIFIED BY 'password';" "GRANT USAGE ON banlist.* to banlist@localhost;" "GRANT ALL PRIVILEGES ON banlist.* to banlist@localhost;" "FLUSH PRIVILEGES;" "USE banlist;" "SOURCE /home/ubuntu/ais/create_mysql_banlist_collector;"
+    for mysqlCommand in "CREATE DATABASE banlist;" "CREATE USER 'banlist'@'localhost' IDENTIFIED BY 'password';" "GRANT USAGE ON banlist.* to banlist@localhost;" "GRANT ALL PRIVILEGES ON banlist.* to banlist@localhost;" "FLUSH PRIVILEGES;" "USE banlist;" "SOURCE /usr/local/src/tables/mysql/ais/create_mysql_banlist_collector;"
     do
             echo $mysqlCommand >> mysqlCommands
     done
@@ -34,7 +34,7 @@ sudo service mysql restart
 echo "GRANT ALL ON banlist.* TO banlist@'%' IDENTIFIED BY 'password';" >> mysqlNetUsage
 echo "FLUSH PRIVILEGES" >> mysqlNetUsage
 mysql -u root -p --password='password'<mysqlNetUsage
-rm mysqlNetUsage
+rm $NETMYSQLFILE
 
 #Python install
 

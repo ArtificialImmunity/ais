@@ -21,7 +21,6 @@ service snort stop
 
 #Drop all snort related tables and recreate databases/tables
 if [ -d /var/lib/mysql/snort ]; then
-
     for mysqlCommand in "DROP DATABASE snort;" "DROP DATABASE archive;"
     do
                 echo $mysqlCommand >> mysqlCommands
@@ -54,7 +53,7 @@ if [ ! -d /var/lib/mysql/syslog ]; then
     rm mysqlCommands
 
 
-    for mysqlCommand in "CREATE DATABASE syslog;" "GRANT USAGE ON syslog.* to syslog@localhost;" "GRANT ALL PRIVILEGES ON syslog.* to syslog@localhost;" "FLUSH PRIVILEGES;" "USE syslog;" "SOURCE /home/ubuntu/ais/create_mysql_syslog;"
+    for mysqlCommand in "CREATE DATABASE syslog;" "GRANT USAGE ON syslog.* to syslog@localhost;" "GRANT ALL PRIVILEGES ON syslog.* to syslog@localhost;" "FLUSH PRIVILEGES;" "USE syslog;" "SOURCE /usr/local/src/ais/tablesmysql/create_mysql_syslog;"
     do
             echo $mysqlCommand >> mysqlCommands
     done
@@ -65,7 +64,7 @@ fi;
 #Ban list MySQL set up
 
 if [ ! -d /var/lib/mysql/banlist ]; then
-    for mysqlCommand in "CREATE DATABASE banlist;" "GRANT USAGE ON banlist.* to banlist@localhost;" "GRANT ALL PRIVILEGES ON banlist.* to banlist@localhost;" "FLUSH PRIVILEGES;" "USE banlist;" "SOURCE /home/ubuntu/ais/create_mysql_banlist_agent;"
+    for mysqlCommand in "CREATE DATABASE banlist;" "GRANT USAGE ON banlist.* to banlist@localhost;" "GRANT ALL PRIVILEGES ON banlist.* to banlist@localhost;" "FLUSH PRIVILEGES;" "USE banlist;" "SOURCE /usr/local/src/tablesmysql/ais/create_mysql_banlist_agent;"
     do
             echo $mysqlCommand >> mysqlCommands
     done
@@ -76,4 +75,4 @@ fi;
 #Start snort up again
 service snort start
 #Get barnyard running again
-./startbarnyard.sh
+. /usr/local/src/scripts/startbarnyard.sh
