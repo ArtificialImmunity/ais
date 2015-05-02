@@ -19,6 +19,10 @@
 
 apt-get update -y; apt-get upgrade -y;
 
+#Auto add IP range for snort HOME_NET
+SNORTIP=$(/sbin/ifconfig eth0 | grep 'inet addr:' | cut -d: -f2| cut -d' ' -f1 | awk -F'.' '{print $1"."$2"."$3"."0"/"24}')
+echo snort snort/address_range  string  $SNORTIP | debconf-set-selections
+
 #snort dependicies
 for i in snort make gcc flex bison libpcap-dev
 do
@@ -63,7 +67,7 @@ if [ ! -d /opt/libdnet-1.12/ ]; then
 	wget -O /opt/libdnet-1.12.tgz https://libdnet.googlecode.com/files/libdnet-1.12.tgz --no-check-certificate
 	tar xvfz /opt/libdnet-1.12.tgz -C /opt
 	cd /opt/libdnet-1.12/
-	./configure; make; checkinstall
+	./configure; make; checkinstall -y
 	dpkg -i /opt/libdnet_1.12-1_amd64.deb
 	rm -r /opt/libdnet-1.12.tgz; cd
 fi;
@@ -86,14 +90,15 @@ if [ ! -d /usr/src/barnyard2/ ]; then
 
 	sed -i 's/#   output database: log, mysql, user=root password=test dbname=db host=localhost/output database: log, mysql, user=snort password=password dbname=snort host=localhost/g' /etc/snort/barnyard2.conf
 
-	cd /usr/share/oinkmaster
-	bash -c "sudo ./create-sidmap.pl /etc/snort/rules > /etc/snort/sid-msg.map"
+	bash -c "sudo . /usr/share/oinkmaster/create-sidmap.pl /etc/snort/rules > /etc/snort/sid-msg.map"
 fi;
 
 
 #mysql install
+debconf-set-selections <<< 'mysql-server mysql-server/root_password password password' #sets auto mysql prompt password to 'password'
+debconf-set-selections <<< 'mysql-server mysql-server/root_password_again password password' #sets auto mysql prompt comfirm password to 'password'
+apt-get install mysql-server -y
 
-cd; apt-get install mysql-server -y
 
 #Snort MySQL set up
 
@@ -109,7 +114,6 @@ fi;
 #SysLog MySQL set up
 
 if [ ! -d /var/lib/mysql/syslog ]; then
-    cd ais/
     for mysqlCommand in "CREATE DATABASE syslog;" "CREATE USER 'syslog'@'localhost' IDENTIFIED BY 'password';" "GRANT USAGE ON syslog.* to syslog@localhost;" "GRANT ALL PRIVILEGES ON syslog.* to syslog@localhost;" "FLUSH PRIVILEGES;" "USE syslog;" "SOURCE /usr/local/src/ais/tablesmysql/create_mysql_syslog;"
     do
             echo $mysqlCommand >> mysqlCommands

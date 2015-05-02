@@ -5,8 +5,9 @@
 apt-get update -y; apt-get upgrade -y;
 
 #mysql install
-
-cd; apt-get install mysql-server -y
+debconf-set-selections <<< 'mysql-server mysql-server/root_password password password' #sets auto mysql prompt password to 'password'
+debconf-set-selections <<< 'mysql-server mysql-server/root_password_again password password' #sets auto mysql prompt comfirm password to 'password'
+apt-get install mysql-server -y
 
 
 #Ban list MySQL set up
