@@ -133,13 +133,13 @@ fi;
 #Python install
 
 #apt-get install
-for i in python-pip python-mysqldb
+for i in python-pip python-mysqldb python-dev
 do
 	apt-get install $i -y;
 done
 
 #pip install
-for i in python-iptables
+for i in python-iptables netifaces
 do
 	pip install $i;
 done
