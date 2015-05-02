@@ -9,7 +9,7 @@ import iptc
 #crontab runs on the minute
 #this get the minute that it just was
 now = datetime.now()
-currentMinute = now.minute-1
+currentMinute = now.minute
 
 #class containing sensor and actuator methods for 404 not found errors
 class Error404():
@@ -21,7 +21,7 @@ class Error404():
     allIP404 = [] #list for all ips found with 404 errors
     ips404 = {'127.0.0.1' : 0} #dict for all ips found, with number of occurrences
     banIP404 = [] #list for all ips who number of occurrences exceed threshold
-    thisIP = '192.168.224.137'
+    thisIP = getThisIP()
     reason = "Potential Dir Scan"
 
     #Gets all 404 errors in the past minute from /var/log/apache2/access.log
@@ -105,8 +105,9 @@ class SSHAuthFail():
             for lines in reversed(open("/var/log/auth.log", "r").readlines()): #cycle through lines of ssh authentication log.
                 if 'sshd' in lines:
                     if 'Failed' in lines:
-                        line = lines.split(" ")
+                        line = lines.split()
                         time = line[2].split(":")
+                        #print time
                         #get the minute the log was made
                         minute = int(time[1])
 
@@ -118,6 +119,7 @@ class SSHAuthFail():
                             break
                         else:
                             #else put the SSH Auth Fail ip in ip list
+                            print "ip = " + line[10]
                             self.allIPSSH.append(line[10])
 
             for allips in self.allIPSSH: #cycle through all ips found
@@ -131,9 +133,9 @@ class SSHAuthFail():
 
     #Puts ip in ban list if number of ping requests is over the threshold
     def SSHBruteForce(self):
-        threshold = 1 #threshold for 404 errors allowed per minute
+        threshold = 1 #threshold for ssh fails allowed per minute
         for ip in self.ipsSSH:
-            if self.ipsSSH[ip] > threshold:#if ip 404 errors is over threshold, add to ban list
+            if self.ipsSSH[ip] > threshold:#if ip ssh fails is over threshold, add to ban list
                 self.banIPSSH.append(ip)
         return
 
@@ -171,6 +173,7 @@ class Sensor():
 
         sshAuthFail.getSSHAuthFail()
         sshAuthFail.SSHBruteForce()
+        #print sshAuthFail.banIPSSH
         return
 
 #class containing actuator methods for all rules

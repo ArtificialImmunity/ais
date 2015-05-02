@@ -2,7 +2,8 @@
 
 #MySQL commands to create tables to log banned IP's
 
-CREATE TABLE bannedIPs ( ip_src      INT      UNSIGNED NOT NULL,
+CREATE TABLE bannedIPs ( id       INT          UNSIGNED,
+                         ip_src      INT      UNSIGNED NOT NULL,
                          ip_dst      INT      UNSIGNED NOT NULL,
                          reason     VARCHAR(255) NOT NULL,
                          timestamp 	   DATETIME NOT NULL);

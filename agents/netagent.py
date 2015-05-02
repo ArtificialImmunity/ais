@@ -96,7 +96,6 @@ class Actuator:
 
     def actuate(self):
         pingFlood.banICMPFlood()
-        pingFlood.updateBanList()
         return
 
 

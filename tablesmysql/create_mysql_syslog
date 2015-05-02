@@ -24,3 +24,4 @@ CREATE TABLE sshFailedAuth ( id       INT          UNSIGNED NOT NULL AUTO_INCREM
 #                         GID  INT    UNSIGNED NOT NULL,
 #                         timecreated 	   DATETIME NOT NULL,
 #                         PRIMARY KEY (id));
+

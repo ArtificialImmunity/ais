@@ -35,7 +35,7 @@ def updateBanList(banlist, mysqlhost, mysqluser, mysqlpass,mysqldb, dstip, reaso
 
 def getThisIP():
     ni.ifaddresses('eth0')
-    return ni.ifaddresses('eth0')[2][0]['addr']
+    return str(ni.ifaddresses('eth0')[2][0]['addr'])
 
 def main():
     return

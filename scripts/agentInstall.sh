@@ -145,8 +145,6 @@ do
 done
 service snort restart
 
-echo "Done!"
-
 
 #crontab
 CRONFILE=mycrontab
@@ -156,3 +154,5 @@ echo "* * * * * /usr/local/src/ais/agents/sysagent.py" >> $CRONFILE #look at sys
 echo "* * * * * /usr/local/src/ais/scripts/collectAndFlush.sh" >> $CRONFILE #send banlist to collector and flush local db
 crontab $CRONFILE
 rm $CRONFILE
+
+echo "Done!"
