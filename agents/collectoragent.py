@@ -55,9 +55,9 @@ class Collector():
     #traffic on all nodes from that ip
     def banFromAllAgents(self):
         #for ip in banGlobalIPs
-        #run sub process bash script
+        #run subprocess bash script
         #-bash script takes in ip and sets iptables rule to ban all traffic from that ip
-        banScript = "/usr/local/src/ais/script/banGlobalIP.sh"
+        banScript = "/usr/local/src/ais/scripts/banGlobalIP.sh"
         for ip in self.globalBanList:
             subprocess.call([banScript, ip], shell=False)
         #subprocess.call("test.sh", shell=True) #needs to be updated to /usr/local/src/ais/scripts/*banGlobalAgents*
