@@ -34,7 +34,7 @@ class PingFlood:
                     WHERE timestamp > date_sub(now(), interval 60 second);")
 
         for row in cur.fetchall():
-            print row[1]
+            #print row[1]
             ip = ipDecToOct(row[1])
             if ip != self.thisIP:
                 self.allIPPF.append(ip)

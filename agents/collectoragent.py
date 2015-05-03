@@ -20,7 +20,7 @@ class Collector():
         cur.execute("SELECT ip_src FROM bannedIPs;")
 
         for row in cur.fetchall():
-            print row[0]
+            #print row[0]
             ip = ipDecToOct(row[0])
             self.allBannedIPs.append(ip)
 
@@ -59,7 +59,7 @@ class Collector():
         #-bash script takes in ip and sets iptables rule to ban all traffic from that ip
         banScript = "/usr/local/src/ais/scripts/banGlobalIP.sh"
         for ip in self.globalBanList:
-            subprocess.call([banScript, ip], shell=False)
+            subprocess.call([banScript, ip.strip()], shell=False)
         #subprocess.call("test.sh", shell=True) #needs to be updated to /usr/local/src/ais/scripts/*banGlobalAgents*
         return
 collector = Collector()
@@ -72,9 +72,13 @@ class Sensor:
     #Contains all sensor methods for collector
     def sense(self):
         collector.getBannedIPs()
+        print collector.allBannedIPs
         collector.getNumberedBanList()
+        print collector.bannedIPs
         collector.getAllAgents()
+        print collector.allAgents
         collector.addToGlobalBanList()
+        print collector.globalBanList
         return
 
 #class containing actuator methods for all rules
@@ -86,12 +90,13 @@ class Actuator:
     def actuate(self):
         collector.banFromAllAgents()
         return
+
 def main():
     sensor = Sensor()
     sensor.sense()
 
-    actuator= Actuator()
-    actuator.actuate()
+    #actuator= Actuator()
+    #actuator.actuate()
     return
 
 
