@@ -39,7 +39,7 @@ class Collector():
 
     #Gets all the registered agents on the network and adds them to allAgents whilst updating threshold
     def getAllAgents(self):
-        for agent in open("allAgentIPs", "r"):
+        for agent in open("/usr/local/src/ais/agents/allAgentIPs", "r"):
             self.allAgents.append(agent.strip("\n"))
         self.threshold = len(self.allAgents)*0.35  # threshold is set to 35% of the network
         return
