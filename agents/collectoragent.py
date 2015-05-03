@@ -95,8 +95,8 @@ def main():
     sensor = Sensor()
     sensor.sense()
 
-    #actuator= Actuator()
-    #actuator.actuate()
+    actuator= Actuator()
+    actuator.actuate()
     return
 
 
