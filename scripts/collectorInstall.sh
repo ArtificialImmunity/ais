@@ -35,7 +35,7 @@ sudo service mysql restart
 echo "GRANT ALL ON banlist.* TO banlist@'%' IDENTIFIED BY 'password';" >> mysqlNetUsage
 echo "FLUSH PRIVILEGES" >> mysqlNetUsage
 mysql -u root -p --password='password'<mysqlNetUsage
-rm $NETMYSQLFILE
+rm mysqlNetUsage
 
 #Python install
 
