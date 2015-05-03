@@ -51,4 +51,11 @@ do
 	pip install $i;
 done
 
+#crontab
+CRONFILE=mycrontab
+crontab -l > $CRONFILE
+echo "* * * * * /usr/local/src/ais/agents/collectoragent.py" >> $CRONFILE #look in db for snort rules and potentially ban ips
+crontab $CRONFILE
+rm $CRONFILE
+
 echo "Done!"
