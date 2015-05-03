@@ -8,7 +8,6 @@ from agentlib import *
 import MySQLdb
 import iptc
 
-
 class PingFlood:
 
     def __init__(self):
@@ -18,6 +17,7 @@ class PingFlood:
     ipsPF = {'127.0.0.1' : 0} #dict for all ips found, with number of occurrences
     banIPPF = [] #list for all ips who number of occurrences exceed threshold
     thisIP = getThisIP()
+    threshold = 5 #amount of ping requests allow per minute
     reason = "Ping Flood Attempt"
 
 
@@ -54,9 +54,8 @@ class PingFlood:
 
     #Puts ip in ban list if number of ping requests is over the threshold
     def icmpPingFlood(self):
-        threshold = 10
         for ip in self.ipsPF:
-            if self.ipsPF[ip] > threshold:
+            if self.ipsPF[ip] > self.threshold:
                 self.banIPPF.append(ip)
 
     #Adds rule to IPTables if ip is in the ban list
@@ -72,7 +71,7 @@ class PingFlood:
             target = iptc.Target(rule, "DROP")
             rule.target = target
             chain.insert_rule(rule)
-        updateBanList(banlist=self.banIPPF, mysqlhost='192.168.224.139', mysqluser='banlist', mysqlpass='password',\
+        updateBanList(banlist=self.banIPPF, mysqlhost=collectorIP, mysqluser='banlist', mysqlpass='password',\
                         mysqldb='banlist', dstip=self.thisIP, reason=self.reason)
         return
 

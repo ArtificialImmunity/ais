@@ -3,6 +3,8 @@ import socket
 import netifaces as ni
 import MySQLdb
 
+collectorIP="192.168.224.139"
+
 #Convert hex to string (used for packet analysis)
 def hexToString(data):
     return ''.join(chr(int(data[i:i+2], 16)) for i in range(0, len(data), 2))
@@ -36,6 +38,10 @@ def updateBanList(banlist, mysqlhost, mysqluser, mysqlpass,mysqldb, dstip, reaso
 def getThisIP():
     ni.ifaddresses('eth0')
     return str(ni.ifaddresses('eth0')[2][0]['addr'])
+
+def setCollectorIP(ip):
+    collectorIP=ip
+    return
 
 def main():
     return

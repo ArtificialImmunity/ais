@@ -14,9 +14,6 @@
 # "--------------------------------------------------"
 
 
-#TODO:
-#add barnyard to start at boot
-
 apt-get update -y; apt-get upgrade -y;
 
 #Auto add IP range for snort HOME_NET

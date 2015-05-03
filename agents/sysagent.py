@@ -9,7 +9,7 @@ import iptc
 #crontab runs on the minute
 #this get the minute that it just was
 now = datetime.now()
-currentMinute = now.minute
+currentMinute = now.minute-1
 
 #class containing sensor and actuator methods for 404 not found errors
 class Error404():
@@ -22,6 +22,7 @@ class Error404():
     ips404 = {'127.0.0.1' : 0} #dict for all ips found, with number of occurrences
     banIP404 = [] #list for all ips who number of occurrences exceed threshold
     thisIP = getThisIP()
+    threshold = 1 #threshold for 404 errors allowed per minute
     reason = "Potential Dir Scan"
 
     #Gets all 404 errors in the past minute from /var/log/apache2/access.log
@@ -59,9 +60,8 @@ class Error404():
 
     #Puts ip into ban list if number of ping requests is over the threshold
     def dirScan(self):
-        threshold = 1 #threshold for 404 errors allowed per minute
         for ip in self.ips404:
-            if self.ips404[ip] > threshold:#if ip 404 errors is over threshold, add to ban list
+            if self.ips404[ip] > self.threshold:#if ip 404 errors is over threshold, add to ban list
                 self.banIP404.append(ip)
         return
 
@@ -81,7 +81,7 @@ class Error404():
             target = iptc.Target(rule, "DROP")
             rule.target = target
             chain.insert_rule(rule)
-        updateBanList(banlist=self.banIP404, mysqlhost='192.168.224.139', mysqluser='banlist', mysqlpass='password',\
+        updateBanList(banlist=self.banIP404, mysqlhost=collectorIP, mysqluser='banlist', mysqlpass='password',\
                         mysqldb='banlist', dstip=self.thisIP, reason=self.reason)
         return
 
@@ -97,6 +97,7 @@ class SSHAuthFail():
     ipsSSH = {'127.0.0.1' : 0} #dict for all ips found, with number of occurrences
     banIPSSH = [] #list for all ips who number of occurrences exceed threshold
     thisIP = getThisIP()
+    threshold = 2 #threshold for ssh fails allowed per minute
     reason = "SSH Brute Force"
 
     #Gets all SSH auth fails and puts respective Ips in allIPSSH
@@ -133,9 +134,8 @@ class SSHAuthFail():
 
     #Puts ip in ban list if number of ping requests is over the threshold
     def SSHBruteForce(self):
-        threshold = 1 #threshold for ssh fails allowed per minute
         for ip in self.ipsSSH:
-            if self.ipsSSH[ip] > threshold:#if ip ssh fails is over threshold, add to ban list
+            if self.ipsSSH[ip] > self.threshold:#if ip ssh fails is over threshold, add to ban list
                 self.banIPSSH.append(ip)
         return
 
@@ -155,7 +155,7 @@ class SSHAuthFail():
             target = iptc.Target(rule, "DROP")
             rule.target = target
             chain.insert_rule(rule)
-        updateBanList(banlist=self.banIPSSH, mysqlhost='192.168.224.139', mysqluser='banlist', mysqlpass='password',\
+        updateBanList(banlist=self.banIPSSH, mysqlhost=collectorIP, mysqluser='banlist', mysqlpass='password',\
                         mysqldb='banlist', dstip=self.thisIP, reason=self.reason)
         return
 
