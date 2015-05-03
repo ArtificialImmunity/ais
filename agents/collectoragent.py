@@ -48,7 +48,7 @@ class Collector():
     def addToGlobalBanList(self):
         for ip in self.bannedIPs:
             if self.bannedIPs[ip] > self.threshold:#if src ip is banned on more than 35% of the number of agents, global ban them
-                self.globalBanList.append(ip)
+                self.globalBanList.append(ip.strip())
         return
 
     #Get all ips from global ban list and runs script to add iptables rules to ban all incomming and outgoing
@@ -59,7 +59,7 @@ class Collector():
         #-bash script takes in ip and sets iptables rule to ban all traffic from that ip
         banScript = "/usr/local/src/ais/scripts/banGlobalIP.sh"
         for ip in self.globalBanList:
-            subprocess.call([banScript, ip.strip()], shell=False)
+            subprocess.call([banScript, ip], shell=False)
         #subprocess.call("test.sh", shell=True) #needs to be updated to /usr/local/src/ais/scripts/*banGlobalAgents*
         return
 collector = Collector()
