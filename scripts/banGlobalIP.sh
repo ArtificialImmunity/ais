@@ -11,7 +11,7 @@ sudo iptables -C INPUT -s $1 -j DROP
 if [ $(echo $?) == 1 ]; then
 
     #If there is no rule, add a local iptables rule to ban all traffic from ip
-    iptables -A INPUT -s $1 -j DROP; iptables -A OUTPUT -d $1 -j DROP
+    sudo iptables -A INPUT -s $1 -j DROP; sudo iptables -A OUTPUT -d $1 -j DROP
 
     #Then if there was an argument given, set a rule on all agents in agent list to ban also
     if [ $# -eq 1 ]; then #if  number of args = 1, i.e. 1 ip address
