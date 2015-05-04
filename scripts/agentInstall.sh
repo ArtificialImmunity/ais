@@ -17,7 +17,7 @@
 apt-get update -y; apt-get upgrade -y;
 
 #Auto add IP range for snort HOME_NET
-SNORTIP=$(/sbin/ifconfig eth0 | grep 'inet addr:' | cut -d: -f2| cut -d' ' -f1 | awk -F'.' '{print $1"."$2"."$3"."0"/"24}')
+SNORTIP=$(/sbin/ifconfig eth0 | grep 'inet addr:' | cut -d: -f2| cut -d' ' -f1)
 echo snort snort/address_range  string  $SNORTIP | debconf-set-selections
 
 #snort dependicies
