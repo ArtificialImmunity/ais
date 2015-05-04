@@ -6,7 +6,7 @@
 #Checks collector to see if there is a rule currently banning this ip from all traffic
 #If a local rule has already been set, it is assumed that all agents have the same rule
 #and thus do not add the same rule again
-if [[ -n $(if [[ ! -n $(sudo iptables -L | grep "$1 " | grep all) ]]; then echo "1"; fi) ]]; then
+if [[ ! -n $(sudo iptables -C INPUT -s "$1" -j DROP) ]]; then
 
     #If there is no rule, add a local iptables rule to ban all traffic from ip
     iptables -A INPUT -s $1 -j DROP; iptables -A OUTPUT -d $1 -j DROP
