@@ -28,13 +28,17 @@ This will set up the MySQL database configurations as well as crontab timers for
 From the collector you can deploy agents to other servers. First, it is wise to create ssh keys to the agent you are deploying. From the collector run these commands:
 
 <code>su root</code>
+
 <code>ssh-keygen -t rsa</code>
-<ssh-copy-id <i>hostname/IP of agent</i></code>
+
+<code>ssh-copy-id <i>hostname/IP</i></code>
+
 <code>exit</code>
+
 
 Once the keys are set up, you are now ready to deploy an agent:
 
-<code>sudo ./deployAgent <i>hostname/ IP of agent</i></code>
+<code>sudo ./deployAgent <i>hostname/IP</i></code>
 
 The agent deploy script will:
     <li>Set up the file structure on the node, and copy over essential node files</li>
