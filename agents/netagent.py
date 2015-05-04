@@ -17,7 +17,7 @@ class PingFlood:
     ipsPF = {'127.0.0.1' : 0} #dict for all ips found, with number of occurrences
     banIPPF = [] #list for all ips who number of occurrences exceed threshold
     thisIP = getThisIP()
-    threshold = 5 #amount of ping requests allow per minute
+    threshold = 15 #amount of ping requests allow per minute
     reason = "Ping Flood Attempt"
 
 

@@ -9,7 +9,7 @@ class Collector():
     bannedIPs = {'127.0.0.1' : 0}
     globalBanList = []
 
-    threshold = 0
+    threshold = 3
 
     #Gets ip source addresses from collector bannedIPs table and puts them in allBannedIPs
     def getBannedIPs(self):
@@ -41,7 +41,7 @@ class Collector():
     def getAllAgents(self):
         for agent in open("/usr/local/src/ais/agents/allAgentIPs", "r"):
             self.allAgents.append(agent.strip("\n"))
-        self.threshold = len(self.allAgents)*0.35  # threshold is set to 35% of the network
+        #self.threshold = len(self.allAgents)*0.35  # threshold is set to 35% of the network
         return
 
     #Gets all IPs in bannedIPs who exceed threshold and puts them in global ban list

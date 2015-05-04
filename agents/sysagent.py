@@ -22,7 +22,7 @@ class Error404():
     ips404 = {'127.0.0.1' : 0} #dict for all ips found, with number of occurrences
     banIP404 = [] #list for all ips who number of occurrences exceed threshold
     thisIP = getThisIP()
-    threshold = 1 #threshold for 404 errors allowed per minute
+    threshold = 10 #threshold for 404 errors allowed per minute
     reason = "Potential Dir Scan"
 
     #Gets all 404 errors in the past minute from /var/log/apache2/access.log
@@ -97,7 +97,7 @@ class SSHAuthFail():
     ipsSSH = {'127.0.0.1' : 0} #dict for all ips found, with number of occurrences
     banIPSSH = [] #list for all ips who number of occurrences exceed threshold
     thisIP = getThisIP()
-    threshold = 2 #threshold for ssh fails allowed per minute
+    threshold = 10 #threshold for ssh fails allowed per minute
     reason = "SSH Brute Force"
 
     #Gets all SSH auth fails and puts respective Ips in allIPSSH
