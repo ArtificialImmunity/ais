@@ -29,7 +29,7 @@ From the collector you can deploy agents to other servers. First, it is wise to 
 
 <code>su root</code>
 
-<code>ssh-keygen -t rsa</code>
+<code>ssh-keygen -t rsa</code> (this is only nessisary if no key has previously been created and you should only do this once as doing it for each agent will result in the previous key no longer working)
 
 <code>ssh-copy-id <i>hostname/IP</i></code>
 
