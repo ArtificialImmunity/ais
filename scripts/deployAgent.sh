@@ -35,12 +35,16 @@ cp $AISFILEPATH/scripts/{collectAndFlush.sh,startbarnyard.sh} $AISDEPLOYPATH/scr
 cp $AISFILEPATH/tablesmysql/{create_mysql_banlist_agent,create_mysql_syslog} $AISDEPLOYPATH/tablesmysql
 
 #copy over scripts
-scp -r $AISDEPLOYPATH $1:~/ > /dev/null 2>&1 &
+scp -r $AISDEPLOYPATH $1:~/ > /dev/null
+#remove local deplot file after it's been copied
 rm -r $AISFILEPATH/deploy
+#mv the ais agent file to /usr/local/src
 ssh -t $1 "sudo mv $HOME/ais /usr/local/src/"
+#if log file doesn't create it, make it
 if [ ! -d /var/log/deployagents ]; then mkdir /var/log/deployagents; fi
+#run install script over ssh and send output to log file which install runs in back ground
 ssh $1 "/usr/bin/sudo bash -s" < $AISFILEPATH/scripts/agentInstall.sh > /var/log/deployagents/$1 2>&1 &
-
+#print out infor to user about deployment status
 printf "\nAgent is being deployed... \n...this may take a few minutes. \nPlease check /var/log/deployagents/$1 for deployment log\n"
-
+#add deployed ip to allAgentIPs list
 echo "$1" | awk -F'@' '{print $2}' >> $AISFILEPATH/agents/allAgentIPs
