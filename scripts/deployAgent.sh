@@ -47,4 +47,4 @@ ssh $1 "/usr/bin/sudo bash -s" < $AISFILEPATH/scripts/agentInstall.sh > /var/log
 #print out infor to user about deployment status
 printf "\nAgent is being deployed... \n...this may take a few minutes. \nPlease check /var/log/deployagents/$1 for deployment log\n"
 #add deployed ip to allAgentIPs list
-echo "$1" | awk -F'@' '{print $2}' >> $AISFILEPATH/agents/allAgentIPs
+echo "$1" >> $AISFILEPATH/agents/allAgentIPs

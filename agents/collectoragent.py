@@ -9,7 +9,7 @@ class Collector():
     bannedIPs = {'127.0.0.1' : 0}
     globalBanList = []
 
-    threshold = 3
+    threshold = 2
 
     #Gets ip source addresses from collector bannedIPs table and puts them in allBannedIPs
     def getBannedIPs(self):
@@ -47,7 +47,7 @@ class Collector():
     #Gets all IPs in bannedIPs who exceed threshold and puts them in global ban list
     def addToGlobalBanList(self):
         for ip in self.bannedIPs:
-            if self.bannedIPs[ip] > self.threshold:#if src ip is banned on more than 35% of the number of agents, global ban them
+            if self.bannedIPs[ip] >= self.threshold:#if src ip is banned on more than 35% of the number of agents, global ban them
                 self.globalBanList.append(ip.strip())
         return
 

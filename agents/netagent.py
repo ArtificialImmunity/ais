@@ -55,7 +55,7 @@ class PingFlood:
     #Puts ip in ban list if number of ping requests is over the threshold
     def icmpPingFlood(self):
         for ip in self.ipsPF:
-            if self.ipsPF[ip] > self.threshold:
+            if self.ipsPF[ip] >= self.threshold:
                 self.banIPPF.append(ip)
 
     #Adds rule to IPTables if ip is in the ban list

@@ -135,7 +135,7 @@ class SSHAuthFail():
     #Puts ip in ban list if number of ping requests is over the threshold
     def SSHBruteForce(self):
         for ip in self.ipsSSH:
-            if self.ipsSSH[ip] > self.threshold:#if ip ssh fails is over threshold, add to ban list
+            if self.ipsSSH[ip] >= self.threshold:#if ip ssh fails is over threshold, add to ban list
                 self.banIPSSH.append(ip)
         return
 
