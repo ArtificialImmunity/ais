@@ -16,7 +16,7 @@
 
 apt-get update -y; apt-get upgrade -y;
 
-#Auto add IP range for snort HOME_NET
+#Auto add IP for snort HOME_NET
 SNORTIP=$(/sbin/ifconfig eth0 | grep 'inet addr:' | cut -d: -f2| cut -d' ' -f1)
 echo snort snort/address_range  string  $SNORTIP | debconf-set-selections
 
@@ -42,7 +42,7 @@ if [ ! -d /opt/daq-2.0.4/ ]; then
 	sed -i 's/output unified2: filename snort.log, limit 128, nostamp, mpls_event_types, vlan_event_types/output unified2: filename snort.log, limit 128, mpls_event_types, vlan_event_types/g' /etc/snort/snort.conf
 
 
-	echo -e "alert icmp any any -> \$HOME_NET any (msg:\"ICMP Test NOW! \"; classtype:not-suspicious; sid:1000001; rev:1;)" >> /etc/snort/rules/local.rules
+	echo -e "alert icmp \$HOME_NET any -> any any (msg:\"ICMP Test NOW! \"; classtype:not-suspicious; sid:1000001; rev:1;)" >> /etc/snort/rules/local.rules
 
 
 	rm /var/log/snort/snort.log

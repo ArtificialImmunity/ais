@@ -35,7 +35,7 @@ class PingFlood:
 
         for row in cur.fetchall():
             #print row[1]
-            ip = ipDecToOct(row[1])
+            ip = ipDecToOct(row[2])
             if ip != self.thisIP:
                 self.allIPPF.append(ip)
 
