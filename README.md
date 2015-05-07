@@ -25,22 +25,19 @@ You will now be able to run the script:
 
 This will set up the MySQL database configurations as well as crontab timers for the collector agent.
 
-From the collector you can deploy agents to other servers. First, it is wise to create ssh keys to the agent you are deploying. From the collector run these commands:
+From the collector you can deploy agents to other servers. 
 
-<code>su root</code>
+There are only two prerequisites for the node when deploying and this is:
 
-<code>ssh-keygen -t rsa</code> (this is only nessisary if no key has previously been created and you should only do this once as doing it for each agent will result in the previous key no longer working)
-
-<code>ssh-copy-id <i>hostname/IP</i></code>
-
-<code>exit</code>
-
-
-Once the keys are set up, you are now ready to deploy an agent:
+1. The /etc/ssh/sshd_config option 'PermitRootLogin' is set to 'yes'
+2. The user that the agent is installed on is a sudoer and the sudoer option is set to 'ALL (ALL) NOPASSWD:ALL'
 
 <code>sudo ./deployAgent <i>hostname/IP</i></code>
 
+
+
 The agent deploy script will:
+    <li>Configure SSH keys on conlector and copy SSH Key ID to node</li>
     <li>Set up the file structure on the node, and copy over essential node files</li>
     <li>Install dependencies for Snort, Barnyard, MySQL, and Python on the node</li>
     <li>Configure necessary files for the aforementioned programs on the node</li>
@@ -49,7 +46,5 @@ The agent deploy script will:
 Once the node install script is finished, everything will be set up and configured to run automatically in the background.
 
 The agent will run snort and barnyard2 to monitor and collect network traffic to the MySQL database according to the snort rules and system python script.
-
-The netagent.py and sysagent.py will be added to the crontab and ran on the minute, every minute
 
 The agent will automatically send IPs that have been banned to the collector, the collector will look for IPs that have banned multiple times, over all agents, and set a global ban on IPs with repeated convictions.
