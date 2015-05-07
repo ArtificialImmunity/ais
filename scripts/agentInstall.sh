@@ -147,7 +147,7 @@ done
 service snort restart
 
 #get apache2 to act as a web server
-apt-get install apache2
+apt-get install apache2 -y
 
 #crontab
 CRONFILE=mycrontab
