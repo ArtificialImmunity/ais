@@ -146,6 +146,8 @@ do
 done
 service snort restart
 
+#get apache2 to act as a web server
+apt-get install apache2
 
 #crontab
 CRONFILE=mycrontab
