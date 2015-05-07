@@ -1,6 +1,8 @@
 #!/usr/bin/python
 # -*- coding: utf-8 -*-
 
+#Author Jordan Bruce
+
 #This is the agent coding for the raw networking side of the ais
 #It uses the snort rules and MySQL database to determine bad traffic
 
@@ -31,11 +33,11 @@ class PingFlood:
                     FROM iphdr\
                     INNER JOIN event\
                     ON event.cid=iphdr.cid\
-                    WHERE timestamp > date_sub(now(), interval 60 second);")
+                    WHERE timestamp > date_sub(now(), interval 60 second);")#not necessary but used just in case
+
 
         for row in cur.fetchall():
-            #print row[1]
-            ip = ipDecToOct(row[2])
+            ip = ipDecToOct(row[2]) #checks for just ping replies
             if ip != self.thisIP:
                 self.allIPPF.append(ip)
 
@@ -74,7 +76,6 @@ class PingFlood:
         updateBanList(banlist=self.banIPPF, mysqlhost=collectorIP, mysqluser='banlist', mysqlpass='password',\
                         mysqldb='banlist', dstip=self.thisIP, reason=self.reason)
         return
-
 pingFlood = PingFlood()
 
 #class containing sensor methods for all rules
@@ -105,11 +106,6 @@ def main():
 
     actuator= Actuator()
     actuator.actuate()
-
-    #print "- All IPs with ICMP amount -"
-    #print pingFlood.ips
-
-    #print "Done"
 
     return
 

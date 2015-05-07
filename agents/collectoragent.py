@@ -1,15 +1,19 @@
 #!/usr/bin/python
+
+#Author Jordan Bruce
+
 from agentlib import *
 import MySQLdb
 import subprocess
 
 class Collector():
-    allAgents = []
-    allBannedIPs = []
-    bannedIPs = {'127.0.0.1' : 0}
-    globalBanList = []
 
-    threshold = 2
+    allAgents = [] # list for all agents that have been deployed
+    allBannedIPs = [] #list for all ips that have been banned on the network
+    bannedIPs = {'127.0.0.1' : 0} #list of all ips that have been banned, with number of occurrences
+    globalBanList = [] # list of all ips who exceed global ban threshold
+
+    threshold = 3
 
     #Gets ip source addresses from collector bannedIPs table and puts them in allBannedIPs
     def getBannedIPs(self):
@@ -19,6 +23,7 @@ class Collector():
 
         cur.execute("SELECT ip_src FROM bannedIPs;")
 
+        #puts all banned ip src addresses in allBannedIPs list
         for row in cur.fetchall():
             #print row[0]
             ip = ipDecToOct(row[0])
@@ -40,8 +45,7 @@ class Collector():
     #Gets all the registered agents on the network and adds them to allAgents whilst updating threshold
     def getAllAgents(self):
         for agent in open("/usr/local/src/ais/agents/allAgentIPs", "r"):
-            self.allAgents.append(agent.strip("\n"))
-        #self.threshold = len(self.allAgents)*0.35  # threshold is set to 35% of the network
+            self.allAgents.append(agent.strip("\n"))#gets all ips and strips new line character
         return
 
     #Gets all IPs in bannedIPs who exceed threshold and puts them in global ban list
@@ -51,7 +55,7 @@ class Collector():
                 self.globalBanList.append(ip.strip())
         return
 
-    #Get all ips from global ban list and runs script to add iptables rules to ban all incomming and outgoing
+    #Get all ips from global ban list and runs script to add iptables rules to ban all incoming and outgoing
     #traffic on all nodes from that ip
     def banFromAllAgents(self):
         #for ip in banGlobalIPs
@@ -60,7 +64,6 @@ class Collector():
         banScript = "/usr/local/src/ais/scripts/banGlobalIP.sh"
         for ip in self.globalBanList:
             subprocess.call([banScript, ip], shell=False)
-        #subprocess.call("test.sh", shell=True) #needs to be updated to /usr/local/src/ais/scripts/*banGlobalAgents*
         return
 collector = Collector()
 
@@ -72,13 +75,13 @@ class Sensor:
     #Contains all sensor methods for collector
     def sense(self):
         collector.getBannedIPs()
-        print collector.allBannedIPs
+        #print collector.allBannedIPs
         collector.getNumberedBanList()
-        print collector.bannedIPs
+        #print collector.bannedIPs
         collector.getAllAgents()
-        print collector.allAgents
+        #print collector.allAgents
         collector.addToGlobalBanList()
-        print collector.globalBanList
+        #print collector.globalBanList
         return
 
 #class containing actuator methods for all rules

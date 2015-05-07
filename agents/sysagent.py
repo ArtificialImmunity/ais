@@ -1,4 +1,7 @@
 #!/usr/bin/python
+
+#Author Jordan Bruce
+
 from agentlib import *
 from datetime import datetime
 import iptc
@@ -69,7 +72,7 @@ class Error404():
     def ban404Scan(self):
         #cycle through ban list
         for ip in self.banIP404:
-            #make an IPTables rule for the ban ip on port 80 (HTTP)
+            #make an IPTables rule for the ban ip on port 80 (HTTP) on interface eth0
             chain = iptc.Chain(iptc.Table(iptc.Table.FILTER), "INPUT")
             rule = iptc.Rule()
             rule.in_interface = "eth0"
@@ -84,7 +87,6 @@ class Error404():
         updateBanList(banlist=self.banIP404, mysqlhost=collectorIP, mysqluser='banlist', mysqlpass='password',\
                         mysqldb='banlist', dstip=self.thisIP, reason=self.reason)
         return
-
 error404 = Error404() #initalise
 
 #class containing sensor and actuator methods for ssh auth failures
@@ -158,7 +160,6 @@ class SSHAuthFail():
         updateBanList(banlist=self.banIPSSH, mysqlhost=collectorIP, mysqluser='banlist', mysqlpass='password',\
                         mysqldb='banlist', dstip=self.thisIP, reason=self.reason)
         return
-
 sshAuthFail = SSHAuthFail() #initalise
 
 #class containing sensor methods for all rules
@@ -173,7 +174,7 @@ class Sensor():
 
         sshAuthFail.getSSHAuthFail()
         sshAuthFail.SSHBruteForce()
-        #print sshAuthFail.banIPSSH
+
         return
 
 #class containing actuator methods for all rules

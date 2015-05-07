@@ -1,7 +1,9 @@
 #!/bin/bash
 
-#for ip in allAgents
-#block all incomming and outgoing traffic from arg $1 (ip addr)
+#Author Jordan Bruce
+
+#This script takes in the argument as 'username@ip" it will then signal all agents
+#that are registered with the collector to ban that ip
 
 #Checks collector to see if there is a rule currently banning this ip from all traffic
 #If a local rule has already been set, it is assumed that all agents have the same rule
@@ -21,5 +23,3 @@ if [ $(echo $?) == 1 ]; then
         done </usr/local/src/ais/agents/allAgentIPs
     fi;
 fi;
-
-#'iptables -A INPUT -s $1 -j DROP; iptables -A OUTPUT -d $1 -j DROP'"
